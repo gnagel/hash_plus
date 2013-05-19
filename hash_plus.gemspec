@@ -9,7 +9,8 @@ Gem::Specification.new do |gem|
   gem.email         = ["glenn@mercury-wireless.com"]
   gem.homepage      = "https://github.com/gnagel/hash_plus"
   gem.summary       = %q{Handy extensions to the Ruby Hash class}
-  gem.description   = %q{}
+  gem.description   = %q{Extensions to the Hash class for checking form input}
+  gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
