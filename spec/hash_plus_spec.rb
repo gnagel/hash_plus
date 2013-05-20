@@ -7,21 +7,57 @@ $:.push File.expand_path("../lib", File.dirname(__FILE__))
 require 'hash_plus'
 
 describe Hash do
-  context "empty hash" do
-    subject(:hash) { Hash.new }
-    it { hash.missing_fields(:a).first.should === :a }
-    it { hash.missing_fields(:a, :b, :c).should =~ [:a, :b, :c] }
+  let(:sample_columns) { [:a, :b, :c] }
+  
+  describe "requires_keys_are_nil" do
+    it "shouldn't raise error" do
+      hash = {}
+      hash.requires_keys_are_nil(*sample_columns)
+    end
     
-    it { expect { hash.requires_fields(:a) }.to raise_error ArgumentError, "Missing value for keys=a in opts={}" }
+    it "should raise error for 1 column" do
+      hash = { :a => 123, :b => nil }
+      expect{ hash.requires_keys_are_nil(*sample_columns) }.to raise_error ArgumentError, "Non-Nil values for keys=a in opts=#{hash.inspect}"
+    end
+    
+    it "should raise error for 2 columns" do
+      hash = { :a => 123, :b => 456 }
+      expect{ hash.requires_keys_are_nil(*sample_columns) }.to raise_error ArgumentError, "Non-Nil values for keys=a,b in opts=#{hash.inspect}"
+    end
   end
   
-  context "hash containing values" do
-    subject(:hash) { {:a => 'b', :c => 'd'} }
-    it { hash.missing_fields(:a).should be_empty }
-    it { hash.missing_fields(:a, :c).should be_empty }
-    it { hash.missing_fields(:a, :b, :c).should =~ [:b] }
+  describe "requires_keys_are_not_nil" do
+    it "shouldn't raise error" do
+      hash = { :a => 123, :b => 456, :c => 'hello world' }
+      hash.requires_keys_are_not_nil(*sample_columns)
+    end
     
-    it { expect { hash.requires_fields(:b) }.to raise_error ArgumentError, "Missing value for keys=b in opts=#{hash.inspect}" }
+    it "should raise error for 1 column" do
+      hash = { :a => 123, :b => 456, :c => nil }
+      expect{ hash.requires_keys_are_not_nil(*sample_columns) }.to raise_error ArgumentError, "Nil values for keys=c in opts=#{hash.inspect}"
+    end
+    
+    it "should raise error for 2 columns" do
+      hash = { :a => 123, :b => nil, :c => nil }
+      expect{ hash.requires_keys_are_not_nil(*sample_columns) }.to raise_error ArgumentError, "Nil values for keys=b,c in opts=#{hash.inspect}"
+    end
+  end
+  
+  describe "requires_keys_are_present" do
+    it "shouldn't raise error" do
+      hash = { :a => 123, :b => 456, :c => nil }
+      hash.requires_keys_are_present(*sample_columns)
+    end
+    
+    it "should raise error for 1 column" do
+      hash = { :a => 123, :b => nil }
+      expect{ hash.requires_keys_are_present(*sample_columns) }.to raise_error ArgumentError, "Missing keys=c in opts=#{hash.inspect}"
+    end
+    
+    it "should raise error for 2 columns" do
+      hash = { :a => 123 }
+      expect{ hash.requires_keys_are_present(*sample_columns) }.to raise_error ArgumentError, "Missing keys=b,c in opts=#{hash.inspect}"
+    end
   end
   
 end
