@@ -4,7 +4,7 @@ require "hash_plus"
 
 Gem::Specification.new do |gem|
   gem.name          = "hash_plus"
-  gem.version       = '1.2'
+  gem.version       = '1.4'
   gem.authors       = ["Glenn Nagel"]
   gem.email         = ["glenn@mercury-wireless.com"]
   gem.homepage      = "https://github.com/gnagel/hash_plus"

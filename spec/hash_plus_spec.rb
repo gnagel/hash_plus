@@ -60,4 +60,22 @@ describe Hash do
     end
   end
   
+  describe "symbolize_keys!" do
+    it "does nothing for empty hash"
+    it "converts string keys to symbols"
+    it "ignores non-string keys"
+  end
+  
+  describe "symbolize_keys_recursive!" do
+    it "does nothing for empty hash"
+    it "converts nested hashes"
+    it "converts nested arrays"
+  end
+  
+  describe "symbolize_array!" do
+    it "does nothing for empty array"
+    it "converts nested arrays"
+    it "converts nested hashes"
+  end
+  
 end
